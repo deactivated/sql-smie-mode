@@ -10,9 +10,11 @@
                  "left outer join" "left join"))
     ("OP"     . ("=" "<" "<=" ">=" ">" "!=" "<>" "is" "is not"
                  "like" "not like"))
+    ("GROUP"  . ("group by"))
+    ("ORDER"  . ("order by"))
 
     (keyword  . ("and" "or" "values" "where" "from" "on" "set"
-                 "update" "," ";"))
+                 "update" "limit" "," ";"))
     ))
 
 
