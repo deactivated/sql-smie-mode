@@ -1,5 +1,7 @@
-(defvar sql-smie-indent-basic 4)
+(require 'smie)
 
+(defvar sql-smie-indent-basic 4
+  "Offset for SQL indentation.")
 
 (defconst sql-smie-tokens
   '(("SELECT" . ("select" "select distinct"))
@@ -12,17 +14,16 @@
                  "like" "not like"))
     ("GROUP"  . ("group by"))
     ("ORDER"  . ("order by"))
-
+    ("ALT-OP" . ("add" "add column" "add index" "add key"
+                 "add constraint" "alter" "alter column"
+                 "modify" "modify column"))
     (keyword  . ("and" "or" "values" "where" "from" "on" "set"
-                 "update" "limit" "," ";"))
-    ))
-
+                 "update" "limit" "," ";"))))
 
 (defconst sql-smie-token-regexp
   (mapconcat (lambda (p)
                (regexp-opt (cdr p) t))
              sql-smie-tokens "\\|"))
-
 
 (defconst sql-smie-grammar
   (smie-prec2->grammar
@@ -31,8 +32,8 @@
        ("SELECT" cols "FROM" tables "WHERE" preds)
        ("INSERT" table "VALUES" preds)
        ("UPDATE" tables "SET" preds "WHERE" preds)
-       (cmd ";" cmd)
-       )
+       ("ALTER" tables "ALT-OP")
+       (cmd ";" cmd))
 
       (col)
       (cols (cols "," cols))
@@ -49,13 +50,12 @@
     '((assoc ","))
     '((assoc "OR") (assoc "AND")))))
 
-
 (defun sql-smie-rules (kind token)
   (case kind
     (:after
      (cond
       ((equal token ",") (smie-rule-separator kind))
-      ((equal token "ON") sql-smi-indent-basic)
+      ((equal token "ON") sql-smie-indent-basic)
       ))
     (:before
      (cond
@@ -63,10 +63,8 @@
       ))
     ))
 
-
 (defun sql-smie-match-group ()
   (/ (position-if-not 'null (cddr (match-data))) 2))
-
 
 (defun sql-smie-forward-token ()
   (forward-comment (point-max))
@@ -82,7 +80,6 @@
        (progn (skip-syntax-forward "w_")
               (point))))))
 
-
 (defun sql-smie-backward-token ()
   (forward-comment (- (point)))
   (cond
@@ -96,7 +93,6 @@
        (point)
        (progn (skip-syntax-backward "w_")
               (point))))))
-
 
 (define-minor-mode sql-smie-mode
   "SMIE-based indentation for SQL mode."
