@@ -2,11 +2,11 @@
 sql-smie-mode.el
 ================
 
-`sql-smie-mode` is an attempt to build a new Emacs indentation mode
-for SQL.  It depends on the SMIE library introduced in Emacs 23.3.
+`sql-smie-mode` is an Emacs minor mode for indenting SQL.  It depends
+on the SMIE library introduced in Emacs 23.3.
 
-The mode is currently very incomplete, but I think it works better
-than `sql-indent.el` in many cases already.
+The mode is currently incomplete, but I think it works better than
+`sql-indent.el` in many cases already.
 
 
 Usage
