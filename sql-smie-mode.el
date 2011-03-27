@@ -22,7 +22,7 @@
 
 (defconst sql-smie-token-regexp
   (mapconcat (lambda (p)
-               (regexp-opt (cdr p) t))
+               (concat "\\b" (regexp-opt (cdr p) t) "\\b"))
              sql-smie-tokens "\\|"))
 
 (defconst sql-smie-grammar
